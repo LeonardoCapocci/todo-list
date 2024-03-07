@@ -1,3 +1,5 @@
-import { renderAll } from "./dom"
+import DomManager from './dom'
 import './style.css'
-renderAll()
+
+const domManager = new DomManager()
+domManager.renderAll()
