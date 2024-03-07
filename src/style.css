@@ -1,0 +1,38 @@
+/* Body */
+body {
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.header-container {
+    background-color: azure;
+    text-align: center;
+    padding: 10px;
+}
+
+.header-container h1 {
+    margin: 0;
+}
+
+/* Main Container */
+.main-container {
+    display: flex;
+    height: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    flex: 1;
+    background-color: lightseagreen;
+}
+
+/* Main Body */
+.project-body {
+    flex: 5;
+    background-color: lightskyblue;
+}
+
+/* Footer */
