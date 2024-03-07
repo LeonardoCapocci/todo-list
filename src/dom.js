@@ -3,33 +3,39 @@ import TodoList from "./todolist";
 export default class DomManager {
   constructor() {
     this.activeProject = ''
+    this.todoList = new TodoList()
   }
 
-  renderTasksForActiveProject() {
-    console.log("workin baby" + this.activeProject)
+  renderTasksForActiveProject(projectBody) {
+    projectBody.textContent = ''
+    const activeProject = this.todoList.projects.find(
+      project => project.name === this.activeProject);
+    console.log(activeProject)
+    activeProject.tasks.forEach((task) => {
+      const taskParagraph = document.createElement('p')
+      taskParagraph.textContent = task.title
+      projectBody.appendChild(taskParagraph)
+    })
   }
 
 // Rendering function
   renderAll() {
-    // Creating a todo list class which manages all the projects and tasks
-    const todoList = new TodoList()
-
     // Creating temporary test projects/classes
-    todoList.createProject('TESTPROJECT');
-    todoList.createTask(0, {
+    this.todoList.createProject('TESTPROJECT');
+    this.todoList.createTask(0, {
       title: 'lets go',
       description: 'be great',
       dueDate: 'today',
       priority: 'essential'
     });
-    todoList.createProject('Another1');
-    todoList.createTask(1, {
+    this.todoList.createProject('Another1');
+    this.todoList.createTask(1, {
       title: 'another leggo',
       description: 'be great',
       dueDate: 'today',
       priority: 'essential'
     });
-    todoList.createTask(1, {
+    this.todoList.createTask(1, {
       title: 'ANOTHA leggo',
       description: 'be great',
       dueDate: 'today',
@@ -57,19 +63,19 @@ export default class DomManager {
     headerContainer.appendChild(headerParagraph)
 
     // Displaying the projects in the sidebar
-    todoList.projects.forEach((project) => {
+    this.todoList.projects.forEach((project) => {
       const projectParagraph = document.createElement('p')
       projectParagraph.textContent = project.name
       // Event listener on project
       projectParagraph.addEventListener('click', () => {
-        let activeProject = projectParagraph.textContent
-        this.renderTasksForActiveProject()
+        this.activeProject = projectParagraph.textContent
+        this.renderTasksForActiveProject(projectBody)
       })
       sidebar.appendChild(projectParagraph)
     })
 
     // Displays every single task of all projects
-    todoList.projects.forEach((project) => {
+    this.todoList.projects.forEach((project) => {
       console.log(project)
       project.tasks.forEach((task) => {
         const taskParagraph = document.createElement('p')
