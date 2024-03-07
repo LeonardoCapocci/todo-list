@@ -19,4 +19,7 @@ export default class TodoList {
       console.log("That project doesn't seem to exist")
     }
   }
+  getAllTasks() {
+    return this.projects.flatMap(project => project.tasks)
+  }
 }

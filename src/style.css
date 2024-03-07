@@ -1,4 +1,7 @@
-* { margin: 0;}
+* { 
+    margin: 0;
+    border: 1px solid red;
+}
 
 /* Body */
 body {
@@ -33,14 +36,25 @@ body {
     background-color: lightseagreen;
 }
 
-.sidebar p {
-    padding: 20px;
+.sidebar div {
+    background-color: red;
+    margin: 20px;
+    padding: 5px;
+}
+
+.sidebar div:hover {
+    background-color: darkred;
 }
 
 /* Main Body */
 .project-body {
     flex: 5;
     background-color: lightskyblue;
+    padding: 10px;
+}
+
+.project-body p {
+    margin: 10px;
 }
 
 /* Footer */

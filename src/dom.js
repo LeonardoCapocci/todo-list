@@ -6,29 +6,56 @@ export default class DomManager {
     this.todoList = new TodoList()
   }
 
-  renderTasksForActiveProject(projectBody) {
+  renderTasks(projectBody, tasks) {
     projectBody.textContent = ''
-    const activeProject = this.todoList.projects.find(
-      project => project.name === this.activeProject);
-    console.log(activeProject)
-    activeProject.tasks.forEach((task) => {
+    tasks.forEach((task) => {
+      const taskDiv = document.createElement('div')
       const taskParagraph = document.createElement('p')
       taskParagraph.textContent = task.title
-      projectBody.appendChild(taskParagraph)
+      taskDiv.appendChild(taskParagraph)
+      projectBody.appendChild(taskDiv)
+    })
+  }
+
+  renderAllTasksTab(sidebar, projectBody) {
+    // Creating the tab
+    const allTasksTabDiv = document.createElement('div')
+    const allTasksTabParagraph = document.createElement('p')
+    allTasksTabParagraph.textContent = 'All'
+
+    allTasksTabDiv.addEventListener('click', () => {
+      this.renderTasks(projectBody, this.todoList.getAllTasks())
+    })
+    allTasksTabDiv.appendChild(allTasksTabParagraph)
+    sidebar.appendChild(allTasksTabDiv)
+  }
+
+  renderProjectTabs(sidebar, projectBody) {
+    this.todoList.projects.forEach((project) => {
+      const projectDiv = document.createElement('div')
+      const projectParagraph = document.createElement('p')
+      projectParagraph.textContent = project.name
+      // Event listener on project
+      projectDiv.addEventListener('click', () => {
+        this.activeProject = projectParagraph.textContent
+        this.renderTasks(projectBody, project.tasks)
+      })
+      projectDiv.appendChild(projectParagraph)
+      sidebar.appendChild(projectDiv)
     })
   }
 
 // Rendering function
   renderAll() {
     // Creating temporary test projects/classes
-    this.todoList.createProject('TESTPROJECT');
+    this.todoList.createProject('Project 1');
     this.todoList.createTask(0, {
       title: 'lets go',
       description: 'be great',
       dueDate: 'today',
       priority: 'essential'
     });
-    this.todoList.createProject('Another1');
+    this.todoList.createProject('Project 2');
     this.todoList.createTask(1, {
       title: 'another leggo',
       description: 'be great',
@@ -62,26 +89,15 @@ export default class DomManager {
     headerParagraph.textContent = 'My Awesome To-Do List App'
     headerContainer.appendChild(headerParagraph)
 
-    // Displaying the projects in the sidebar
-    this.todoList.projects.forEach((project) => {
-      const projectParagraph = document.createElement('p')
-      projectParagraph.textContent = project.name
-      // Event listener on project
-      projectParagraph.addEventListener('click', () => {
-        this.activeProject = projectParagraph.textContent
-        this.renderTasksForActiveProject(projectBody)
-      })
-      sidebar.appendChild(projectParagraph)
-    })
+    // Displays the special sidebar filters
+    // All tasks
+    this.renderAllTasksTab(sidebar, projectBody)
+    this.renderTasks(projectBody, this.todoList.getAllTasks())
 
-    // Displays every single task of all projects
-    this.todoList.projects.forEach((project) => {
-      console.log(project)
-      project.tasks.forEach((task) => {
-        const taskParagraph = document.createElement('p')
-        taskParagraph.textContent = task.title
-        projectBody.appendChild(taskParagraph)
-      })
-    })
+    // Displaying the projects in the sidebar
+    this.renderProjectTabs(sidebar, projectBody)
+
+    // Add project
+
   }
 }
