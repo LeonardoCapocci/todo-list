@@ -20,6 +20,7 @@ export default class DomManager {
   renderAllTasksTab(sidebar, projectBody) {
     // Creating the tab
     const allTasksTabDiv = document.createElement('div')
+    allTasksTabDiv.classList.add('project')
     const allTasksTabParagraph = document.createElement('p')
     allTasksTabParagraph.textContent = 'All'
 
@@ -30,9 +31,21 @@ export default class DomManager {
     sidebar.appendChild(allTasksTabDiv)
   }
 
+  createAddProjectButton(sidebar) {
+    const addProjectButtonDiv = document.createElement('div')
+    addProjectButtonDiv.classList.add('add-project-button-div')
+    const addProjectButton = document.createElement('button')
+    addProjectButton.classList.add('add-project-button')
+    addProjectButton.textContent = 'ADD PROJECT'
+    addProjectButtonDiv.appendChild(addProjectButton)
+    sidebar.appendChild(addProjectButtonDiv)
+  }
+
   renderProjectTabs(sidebar, projectBody) {
+    const AllprojectsDiv = document.createElement('div')
     this.todoList.projects.forEach((project) => {
       const projectDiv = document.createElement('div')
+      projectDiv.classList.add('project')
       const projectParagraph = document.createElement('p')
       projectParagraph.textContent = project.name
       // Event listener on project
@@ -41,8 +54,10 @@ export default class DomManager {
         this.renderTasks(projectBody, project.tasks)
       })
       projectDiv.appendChild(projectParagraph)
-      sidebar.appendChild(projectDiv)
+      AllprojectsDiv.appendChild(projectDiv)
     })
+    this.createAddProjectButton(AllprojectsDiv)
+    sidebar.appendChild(AllprojectsDiv)
   }
 
 // Rendering function
@@ -96,8 +111,5 @@ export default class DomManager {
 
     // Displaying the projects in the sidebar
     this.renderProjectTabs(sidebar, projectBody)
-
-    // Add project
-
   }
 }

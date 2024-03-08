@@ -36,14 +36,18 @@ body {
     background-color: lightseagreen;
 }
 
-.sidebar div {
+.project, .add-project-button-div {
     background-color: red;
     margin: 20px;
     padding: 5px;
 }
 
-.sidebar div:hover {
+.project:hover, .add-project-button-div:hover {
     background-color: darkred;
+}
+
+.add-project-button {
+    padding: 0px;
 }
 
 /* Main Body */
@@ -51,6 +55,11 @@ body {
     flex: 5;
     background-color: lightskyblue;
     padding: 10px;
+    padding-top: 5px;
+}
+
+.project-body div {
+    margin: 10px;
 }
 
 .project-body p {
