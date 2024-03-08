@@ -7,19 +7,23 @@ export default class DomManager {
   }
 
   renderAllTasksTab(homeProjectsDiv, projectBody) {
-    // Creating the tab
-    const allTasksTabDiv = document.createElement('div')
-    allTasksTabDiv.classList.add('project')
-    const allTasksTabParagraph = document.createElement('p')
-    allTasksTabParagraph.textContent = 'All'
+    const tabDiv = this.createHomeTaskTab('All Tasks')
 
-    allTasksTabDiv.addEventListener('click', () => {
-      this.renderTasks(projectBody, this.todoList.getAllTasks())
-    })
-    allTasksTabDiv.appendChild(allTasksTabParagraph)
-    homeProjectsDiv.appendChild(allTasksTabDiv)
+    this.handleProjectTabClick(tabDiv, projectBody, 
+                              this.todoList.getAllTasks(), "All Tasks")
+
+    homeProjectsDiv.appendChild(tabDiv)
   }
   
+  createHomeTaskTab(name) {
+    const tabDiv = document.createElement('div')
+    tabDiv.classList.add('project')
+    const tabParagraph = document.createElement('p')
+    tabParagraph.textContent = name
+    tabDiv.appendChild(tabParagraph)
+    return tabDiv
+  }
+
   renderProjectTabs(allProjectsDiv, projectBody) {
     this.todoList.projects.forEach((project) => {
       const projectDiv = document.createElement('div')
@@ -27,17 +31,25 @@ export default class DomManager {
       const projectParagraph = document.createElement('p')
       projectParagraph.textContent = project.name
       // Event listener on project
-      projectDiv.addEventListener('click', () => {
-        this.activeProject = projectParagraph.textContent
-        this.renderTasks(projectBody, project.tasks)
-      })
+      this.handleProjectTabClick(projectDiv, projectBody, 
+                                project.tasks, project.name)
+
       projectDiv.appendChild(projectParagraph)
       allProjectsDiv.appendChild(projectDiv)
     })
   }
 
-  renderTasks(projectBody, tasks) {
+  handleProjectTabClick(projectTabDiv, projectBody, tasks, projectName) {
+    projectTabDiv.addEventListener('click', () => {
+      this.renderTasks(projectBody, tasks, projectName)
+    })
+  }
+
+  renderTasks(projectBody, tasks, projectName) {
     projectBody.textContent = ''
+    const projectNameTitle = document.createElement('p')
+    projectNameTitle.textContent = projectName
+    projectBody.appendChild(projectNameTitle)
     tasks.forEach((task) => {
       const taskDiv = document.createElement('div')
       const taskParagraph = document.createElement('p')
@@ -88,11 +100,9 @@ export default class DomManager {
     projectParagraph.textContent = this.todoList.projects[lastProjectIndex].name
     projectDiv.appendChild(projectParagraph)
     allProjectsDiv.appendChild(projectDiv)
-    projectDiv.addEventListener('click', () => {
-      this.activeProject = projectParagraph.textContent
-      this.renderTasks(projectBody, 
-                      this.todoList.projects[lastProjectIndex].tasks)
-    })
+    this.handleProjectTabClick(projectDiv, projectBody, 
+      this.todoList.projects[lastProjectIndex].tasks, 
+      this.todoList.projects[lastProjectIndex].name)
   }
 
 // Rendering function
@@ -151,7 +161,7 @@ export default class DomManager {
     // Displays the special sidebar filters
     // All tasks
     this.renderAllTasksTab(homeProjectsDiv, projectBody)
-    this.renderTasks(projectBody, this.todoList.getAllTasks())
+    this.renderTasks(projectBody, this.todoList.getAllTasks(), "All Tasks")
 
     // Displaying the projects in the sidebar
     this.renderProjectTabs(allProjectsDiv, projectBody)
