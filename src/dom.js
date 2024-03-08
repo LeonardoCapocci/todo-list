@@ -17,7 +17,7 @@ export default class DomManager {
     })
   }
 
-  renderAllTasksTab(sidebar, projectBody) {
+  renderAllTasksTab(homeProjectsDiv, projectBody) {
     // Creating the tab
     const allTasksTabDiv = document.createElement('div')
     allTasksTabDiv.classList.add('project')
@@ -28,21 +28,20 @@ export default class DomManager {
       this.renderTasks(projectBody, this.todoList.getAllTasks())
     })
     allTasksTabDiv.appendChild(allTasksTabParagraph)
-    sidebar.appendChild(allTasksTabDiv)
+    homeProjectsDiv.appendChild(allTasksTabDiv)
   }
 
-  createAddProjectButton(sidebar) {
+  createAddProjectButton(addProjectButtonSuperiorDiv) {
     const addProjectButtonDiv = document.createElement('div')
     addProjectButtonDiv.classList.add('add-project-button-div')
     const addProjectButton = document.createElement('button')
     addProjectButton.classList.add('add-project-button')
     addProjectButton.textContent = 'ADD PROJECT'
     addProjectButtonDiv.appendChild(addProjectButton)
-    sidebar.appendChild(addProjectButtonDiv)
+    addProjectButtonSuperiorDiv.appendChild(addProjectButtonDiv)
   }
 
-  renderProjectTabs(sidebar, projectBody) {
-    const AllprojectsDiv = document.createElement('div')
+  renderProjectTabs(allProjectsDiv, projectBody) {
     this.todoList.projects.forEach((project) => {
       const projectDiv = document.createElement('div')
       projectDiv.classList.add('project')
@@ -54,10 +53,8 @@ export default class DomManager {
         this.renderTasks(projectBody, project.tasks)
       })
       projectDiv.appendChild(projectParagraph)
-      AllprojectsDiv.appendChild(projectDiv)
+      allProjectsDiv.appendChild(projectDiv)
     })
-    this.createAddProjectButton(AllprojectsDiv)
-    sidebar.appendChild(AllprojectsDiv)
   }
 
 // Rendering function
@@ -89,12 +86,24 @@ export default class DomManager {
     const headerContainer = document.createElement('div')
     body.appendChild(headerContainer)
     headerContainer.classList = 'header-container'
+
     const mainContainer = document.createElement('div')
-    body.appendChild(mainContainer)
     mainContainer.className = 'main-container'
+    body.appendChild(mainContainer)
+
     const sidebar = document.createElement('div')
     sidebar.className = 'sidebar'
     mainContainer.appendChild(sidebar)
+
+    const homeProjectsDiv = document.createElement('div')
+    sidebar.appendChild(homeProjectsDiv)
+
+    const allProjectsDiv = document.createElement('div')
+    sidebar.appendChild(allProjectsDiv)
+
+    const addProjectButtonSuperiorDiv = document.createElement('div')
+    sidebar.appendChild(addProjectButtonSuperiorDiv)
+
     const projectBody = document.createElement('div')
     projectBody.className = 'project-body'
     mainContainer.appendChild(projectBody)
@@ -106,10 +115,13 @@ export default class DomManager {
 
     // Displays the special sidebar filters
     // All tasks
-    this.renderAllTasksTab(sidebar, projectBody)
+    this.renderAllTasksTab(homeProjectsDiv, projectBody)
     this.renderTasks(projectBody, this.todoList.getAllTasks())
 
     // Displaying the projects in the sidebar
-    this.renderProjectTabs(sidebar, projectBody)
+    this.renderProjectTabs(allProjectsDiv, projectBody)
+
+    // Add Project Button
+    this.createAddProjectButton(addProjectButtonSuperiorDiv)
   }
 }
