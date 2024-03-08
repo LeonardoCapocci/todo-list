@@ -57,6 +57,7 @@ export default class DomManager {
       taskDiv.appendChild(taskParagraph)
       projectBody.appendChild(taskDiv)
     })
+    this.createAddTaskButton(projectBody)
   }
 
   createAddProjectButton(sidebar, allProjectsDiv, projectBody) {
@@ -103,6 +104,30 @@ export default class DomManager {
     this.handleProjectTabClick(projectDiv, projectBody, 
       this.todoList.projects[lastProjectIndex].tasks, 
       this.todoList.projects[lastProjectIndex].name)
+  }
+
+  createAddTaskButton(projectBody) {
+    const addTaskButton = document.createElement('button')
+    projectBody.appendChild(addTaskButton)
+    addTaskButton.textContent = 'ADD TASK'
+    addTaskButton.classList.add('add-task-button')
+    this.handleAddTaskButtonClick(addTaskButton, projectBody)
+  }
+
+  handleAddTaskButtonClick(addTaskButton, projectBody) {
+    addTaskButton.addEventListener('click', () => {
+      this.createAddTaskForm(projectBody)
+    })
+  }
+
+  createAddTaskForm(projectBody) {
+    const addTaskForm = document.createElement('form')
+    const lastChild = projectBody.lastElementChild
+    projectBody.insertBefore(addTaskForm, lastChild)
+    const addTaskInput = document.createElement('input')
+    addTaskForm.appendChild(addTaskInput)
+    addTaskInput.type = 'text'
+    addTaskInput.id = 'title'
   }
 
 // Rendering function
