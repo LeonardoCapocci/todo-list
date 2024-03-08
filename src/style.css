@@ -36,22 +36,20 @@ body {
     background-color: lightseagreen;
 }
 
-.project, .add-project-button-div {
+.project, .add-project-button {
     background-color: red;
     margin: 20px;
     padding: 5px;
 }
 
-.add-project-button-div {
-    margin: 0 20px;
-}
-
-.project:hover, .add-project-button-div:hover {
-    background-color: darkred;
-}
-
 .add-project-button {
-    padding: 0px;
+    margin: 0 20px;
+    width: calc(100% - 40px);
+    text-align: left;
+}
+
+.project:hover, .add-project-button:hover {
+    background-color: darkred;
 }
 
 /* Main Body */

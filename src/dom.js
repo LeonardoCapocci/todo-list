@@ -6,17 +6,6 @@ export default class DomManager {
     this.todoList = new TodoList()
   }
 
-  renderTasks(projectBody, tasks) {
-    projectBody.textContent = ''
-    tasks.forEach((task) => {
-      const taskDiv = document.createElement('div')
-      const taskParagraph = document.createElement('p')
-      taskParagraph.textContent = task.title
-      taskDiv.appendChild(taskParagraph)
-      projectBody.appendChild(taskDiv)
-    })
-  }
-
   renderAllTasksTab(homeProjectsDiv, projectBody) {
     // Creating the tab
     const allTasksTabDiv = document.createElement('div')
@@ -30,17 +19,7 @@ export default class DomManager {
     allTasksTabDiv.appendChild(allTasksTabParagraph)
     homeProjectsDiv.appendChild(allTasksTabDiv)
   }
-
-  createAddProjectButton(addProjectButtonSuperiorDiv) {
-    const addProjectButtonDiv = document.createElement('div')
-    addProjectButtonDiv.classList.add('add-project-button-div')
-    const addProjectButton = document.createElement('button')
-    addProjectButton.classList.add('add-project-button')
-    addProjectButton.textContent = 'ADD PROJECT'
-    addProjectButtonDiv.appendChild(addProjectButton)
-    addProjectButtonSuperiorDiv.appendChild(addProjectButtonDiv)
-  }
-
+  
   renderProjectTabs(allProjectsDiv, projectBody) {
     this.todoList.projects.forEach((project) => {
       const projectDiv = document.createElement('div')
@@ -54,6 +33,65 @@ export default class DomManager {
       })
       projectDiv.appendChild(projectParagraph)
       allProjectsDiv.appendChild(projectDiv)
+    })
+  }
+
+  renderTasks(projectBody, tasks) {
+    projectBody.textContent = ''
+    tasks.forEach((task) => {
+      const taskDiv = document.createElement('div')
+      const taskParagraph = document.createElement('p')
+      taskParagraph.textContent = task.title
+      taskDiv.appendChild(taskParagraph)
+      projectBody.appendChild(taskDiv)
+    })
+  }
+
+  createAddProjectButton(sidebar, allProjectsDiv, projectBody) {
+    const addProjectButton = document.createElement('button')
+    addProjectButton.classList.add('add-project-button')
+    addProjectButton.textContent = 'ADD PROJECT'
+    sidebar.appendChild(addProjectButton)
+    addProjectButton.addEventListener('click', () => {
+      this.createAddProjectForm(allProjectsDiv, projectBody)
+    })
+  }
+
+  createAddProjectForm(allProjectsDiv, projectBody) {
+    const addProjectForm = document.createElement('form')
+    allProjectsDiv.appendChild(addProjectForm)
+    const addProjectInput = document.createElement('input')
+    addProjectInput.type = 'text'
+    addProjectInput.id = 'projectNameInput'
+    addProjectForm.appendChild(addProjectInput)
+    const addProjectSubmit = document.createElement('button')
+    addProjectSubmit.textContent = 'Submit'
+    addProjectSubmit.type = 'submit'
+    addProjectForm.appendChild(addProjectSubmit)
+    addProjectSubmit.addEventListener('click', (e) => {
+      e.preventDefault()
+      this.appendProject(addProjectInput.value, allProjectsDiv, projectBody)
+      addProjectForm.remove()
+    })
+  }
+
+  appendProject(name, allProjectsDiv, projectBody) {
+    this.todoList.createProject(name)
+    this.renderLatestProjectTab(allProjectsDiv, projectBody)
+  }
+
+  renderLatestProjectTab(allProjectsDiv, projectBody) {
+    const projectDiv = document.createElement('div')
+    projectDiv.classList.add('project')
+    const projectParagraph = document.createElement('p')
+    const lastProjectIndex = this.todoList.projects.length - 1
+    projectParagraph.textContent = this.todoList.projects[lastProjectIndex].name
+    projectDiv.appendChild(projectParagraph)
+    allProjectsDiv.appendChild(projectDiv)
+    projectDiv.addEventListener('click', () => {
+      this.activeProject = projectParagraph.textContent
+      this.renderTasks(projectBody, 
+                      this.todoList.projects[lastProjectIndex].tasks)
     })
   }
 
@@ -101,9 +139,6 @@ export default class DomManager {
     const allProjectsDiv = document.createElement('div')
     sidebar.appendChild(allProjectsDiv)
 
-    const addProjectButtonSuperiorDiv = document.createElement('div')
-    sidebar.appendChild(addProjectButtonSuperiorDiv)
-
     const projectBody = document.createElement('div')
     projectBody.className = 'project-body'
     mainContainer.appendChild(projectBody)
@@ -122,6 +157,6 @@ export default class DomManager {
     this.renderProjectTabs(allProjectsDiv, projectBody)
 
     // Add Project Button
-    this.createAddProjectButton(addProjectButtonSuperiorDiv)
+    this.createAddProjectButton(sidebar, allProjectsDiv, projectBody)
   }
 }
