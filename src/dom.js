@@ -47,7 +47,7 @@ export default class DomManager {
 
   renderTasks(projectBody, tasks, projectName) {
     projectBody.textContent = ''
-    const projectNameTitle = document.createElement('p')
+    const projectNameTitle = document.createElement('h1')
     projectNameTitle.textContent = projectName
     projectBody.appendChild(projectNameTitle)
     tasks.forEach((task) => {
@@ -63,7 +63,7 @@ export default class DomManager {
   createAddProjectButton(sidebar, allProjectsDiv, projectBody) {
     const addProjectButton = document.createElement('button')
     addProjectButton.classList.add('add-project-button')
-    addProjectButton.textContent = 'ADD PROJECT'
+    addProjectButton.textContent = 'Add Project'
     sidebar.appendChild(addProjectButton)
     addProjectButton.addEventListener('click', () => {
       this.createAddProjectForm(allProjectsDiv, projectBody)
@@ -109,7 +109,7 @@ export default class DomManager {
   createAddTaskButton(projectBody) {
     const addTaskButton = document.createElement('button')
     projectBody.appendChild(addTaskButton)
-    addTaskButton.textContent = 'ADD TASK'
+    addTaskButton.textContent = 'Add Task'
     addTaskButton.classList.add('add-task-button')
     this.handleAddTaskButtonClick(addTaskButton, projectBody)
   }
@@ -124,10 +124,55 @@ export default class DomManager {
     const addTaskForm = document.createElement('form')
     const lastChild = projectBody.lastElementChild
     projectBody.insertBefore(addTaskForm, lastChild)
-    const addTaskInput = document.createElement('input')
-    addTaskForm.appendChild(addTaskInput)
-    addTaskInput.type = 'text'
-    addTaskInput.id = 'title'
+
+    const addTaskTitleLabel = document.createElement('label')
+    addTaskForm.appendChild(addTaskTitleLabel)
+    addTaskTitleLabel.textContent = "Title: "
+    const addTaskTitleInput = document.createElement('input')
+    addTaskForm.appendChild(addTaskTitleInput)
+    addTaskTitleInput.type = 'text'
+    addTaskTitleInput.id = 'title-input'
+    addTaskTitleInput.placeholder = 'What to do?'
+
+    const addTaskDescriptionLabel = document.createElement('label')
+    addTaskForm.appendChild(addTaskDescriptionLabel)
+    addTaskDescriptionLabel.textContent = "Description: "
+    const addTaskDescriptionInput = document.createElement('textarea')
+    addTaskForm.appendChild(addTaskDescriptionInput)
+    addTaskDescriptionInput.id = 'description-input'
+    addTaskDescriptionInput.placeholder = 'Any extra details?'
+
+    const addTaskDueDateLabel = document.createElement('label')
+    addTaskForm.appendChild(addTaskDueDateLabel)
+    addTaskDueDateLabel.textContent = 'Due Date: '
+    const addTaskDueDateInput = document.createElement('input')
+    addTaskForm.appendChild(addTaskDueDateInput)
+    addTaskDueDateInput.type = 'date'
+    addTaskDueDateInput.id = 'date-input'
+
+    const addTaskPriorityLabel = document.createElement('label')
+    addTaskForm.appendChild(addTaskPriorityLabel)
+    addTaskPriorityLabel.textContent = 'Priority'
+    const addTaskPrioritySelect = document.createElement('select')
+    addTaskPrioritySelect.id = 'priority-select'
+    addTaskForm.appendChild(addTaskPrioritySelect)
+    const addPriorityLow = document.createElement('option')
+    addTaskPrioritySelect.appendChild(addPriorityLow)
+    addPriorityLow.value = 'low'
+    addPriorityLow.textContent = 'Low'
+    const addPriorityMedium = document.createElement('option')
+    addTaskPrioritySelect.appendChild(addPriorityMedium)
+    addPriorityMedium.value = 'Medium'
+    addPriorityMedium.textContent = 'Medium'
+    const addPriorityhigh = document.createElement('option')
+    addTaskPrioritySelect.appendChild(addPriorityhigh)
+    addPriorityhigh.value = 'high'
+    addPriorityhigh.textContent = 'High'
+
+    const addTaskSubmitButton = document.createElement('button')
+    addTaskForm.appendChild(addTaskSubmitButton)
+    addTaskSubmitButton.type = 'Submit'
+    addTaskSubmitButton.textContent = 'Submit'
   }
 
 // Rendering function

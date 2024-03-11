@@ -1,6 +1,8 @@
 * { 
     margin: 0;
-    border: 1px solid red;
+    font-size: 1.25rem;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* border: 1px solid red; */
 }
 
 /* Body */
@@ -13,13 +15,15 @@ body {
 
 /* Header */
 .header-container {
-    background-color: azure;
+    background-color: rgb(238, 240, 243);
     text-align: center;
     padding: 10px;
+    border-bottom: 2px solid darkblue;
 }
 
 .header-container h1 {
     margin: 0;
+    font-size: 2rem;
 }
 
 /* Main Container */
@@ -33,29 +37,35 @@ body {
     flex: 1;
     /* display: flex;
     flex-direction: column; */
-    background-color: lightseagreen;
+    background-color: white;
 }
 
-.project, .add-project-button {
-    background-color: red;
+.project, .add-project-button, .sidebar form {
     margin: 20px;
     padding: 5px;
+    border-radius: 7px;
+}
+
+.sidebar, form {
+    width: 50%;
 }
 
 .add-project-button {
     margin: 0 20px;
     width: calc(100% - 40px);
     text-align: left;
+    background-color: white;
+    border: none;
 }
 
 .project:hover, .add-project-button:hover {
-    background-color: darkred;
+    background-color: rgb(231, 231, 231);
 }
 
 /* Main Body */
 .project-body {
-    flex: 5;
-    background-color: lightskyblue;
+    flex: 3.5;
+    background-color: rgb(231, 231, 231);
     padding: 10px;
     padding-top: 5px;
 }
@@ -64,13 +74,41 @@ body {
     margin: 10px;
 }
 
+.project-body form {
+    margin: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 7px;
+    width: calc(100% - 60px);
+}
+
+.project-body h1 {
+    font-size: 1.75rem;
+    padding: 20px;
+    margin: 20px;
+    color: rgb(247, 244, 244);
+    background-color: darkblue;
+    border-radius: 7px;
+}
+
 .project-body p {
     margin: 10px;
+    border: 1px solid gray;
 }
 
 .add-task-button {
     margin: 10px 20px;
     padding: 0px;
+}
+
+#title-input, #description-input, #date-input {
+    width: calc(100% - 10px);
+    padding: 1px 2px;
+}
+
+#priority-select {
+    width: calc(100%);
+    padding: 2px;
 }
 
 /* Footer */
