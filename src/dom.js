@@ -70,7 +70,10 @@ export default class DomManager {
       taskDescriptionParagraph.textContent = task.description
       const taskDueDateParagraph = document.createElement('p')
       taskDiv.appendChild(taskDueDateParagraph)
-      taskDueDateParagraph.textContent = task.dueDate
+      const dueDate = new Date(task.dueDate.replace(/-/g, '\/'))
+      const options = { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }
+      const formattedDueDate = dueDate.toLocaleDateString('en-US', options)
+      taskDueDateParagraph.textContent = formattedDueDate
       const taskPriorityParagraph = document.createElement('p')
       taskDiv.appendChild(taskPriorityParagraph)
       taskPriorityParagraph.textContent = task.priority
@@ -202,8 +205,9 @@ export default class DomManager {
     addTaskSubmitButton.addEventListener('click', (e) => {
       e.preventDefault()
       this.appendTask(addTaskTitleInput.value, addTaskDescriptionInput.value, 
-                addTaskDueDateInput.valueAsDate, addTaskPrioritySelect.value, 
+                addTaskDueDateInput.value, addTaskPrioritySelect.value, 
                 projectBody)
+
       addTaskForm.remove()
     })
   }
@@ -222,26 +226,27 @@ export default class DomManager {
 // Rendering function
   renderAll() {
     // Creating temporary test projects/classes
-    this.todoList.createProject('Project 1');
-    this.todoList.createTask(0, {
-      title: 'lets go',
-      description: 'be great',
-      dueDate: 'today',
-      priority: 'essential'
-    });
-    this.todoList.createProject('Project 2');
-    this.todoList.createTask(1, {
-      title: 'another leggo',
-      description: 'be great',
-      dueDate: 'today',
-      priority: 'essential'
-    });
-    this.todoList.createTask(1, {
-      title: 'ANOTHA leggo',
-      description: 'be great',
-      dueDate: 'today',
-      priority: 'essential'
-    });
+    this.todoList.createProject('Project 1')
+    this.todoList.createProject('Project 2')
+    // this.todoList.createTask(0, {
+    //   title: 'lets go',
+    //   description: 'be great',
+    //   dueDate: 'today',
+    //   priority: 'essential'
+    // });
+
+    // this.todoList.createTask(1, {
+    //   title: 'another leggo',
+    //   description: 'be great',
+    //   dueDate: 'today',
+    //   priority: 'essential'
+    // });
+    // this.todoList.createTask(1, {
+    //   title: 'ANOTHA leggo',
+    //   description: 'be great',
+    //   dueDate: 'today',
+    //   priority: 'essential'
+    // });
 
     // Creating and sorting the divs
     const body = document.querySelector('body')
