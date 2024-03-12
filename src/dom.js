@@ -16,7 +16,7 @@ export default class DomManager {
     // this.handleProjectTabClick(tabDiv, projectBody, 
     //                           this.todoList.getAllTasks(), "All Tasks")
     tabDiv.addEventListener('click', () => {
-      this.renderTasks(projectBody, this.todoList.getAllTasks(), 'allt')
+      this.renderTasks(projectBody, this.todoList.getAllTasks(), 'All Tasks')
     })
     homeProjectsDiv.appendChild(tabDiv)
   }
@@ -48,13 +48,9 @@ export default class DomManager {
   handleProjectTabClick(projectTabDiv, projectBody, tasks, projectName) {
     projectTabDiv.addEventListener('click', () => {
       this.renderTasks(projectBody, tasks, projectName)
-      if (projectName === "All Tasks") {
-        this.activeProject = null
-      }
-      else {
       this.activeProject = this.todoList.projects.find(
                             project => project.name === projectName)
-      }
+      console.log(this.activeProject)
     })
   }
 
@@ -65,11 +61,21 @@ export default class DomManager {
     projectBody.appendChild(projectNameTitle)
     tasks.forEach((task) => {
       const taskDiv = document.createElement('div')
-      const taskParagraph = document.createElement('p')
-      taskParagraph.textContent = task.title
-      taskDiv.appendChild(taskParagraph)
       projectBody.appendChild(taskDiv)
+      const taskTitleParagraph = document.createElement('p')
+      taskDiv.appendChild(taskTitleParagraph)
+      taskTitleParagraph.textContent = task.title
+      const taskDescriptionParagraph = document.createElement('p')
+      taskDiv.appendChild(taskDescriptionParagraph)
+      taskDescriptionParagraph.textContent = task.description
+      const taskDueDateParagraph = document.createElement('p')
+      taskDiv.appendChild(taskDueDateParagraph)
+      taskDueDateParagraph.textContent = task.dueDate
+      const taskPriorityParagraph = document.createElement('p')
+      taskDiv.appendChild(taskPriorityParagraph)
+      taskPriorityParagraph.textContent = task.priority
     })
+    if (projectName !== "All Tasks")
     this.createAddTaskButton(projectBody)
   }
 
@@ -79,11 +85,12 @@ export default class DomManager {
     addProjectButton.textContent = 'Add Project'
     sidebar.appendChild(addProjectButton)
     addProjectButton.addEventListener('click', () => {
-      this.createAddProjectForm(allProjectsDiv, projectBody)
+      this.createAddProjectForm(allProjectsDiv, projectBody, sidebar)
+      addProjectButton.remove()
     })
   }
 
-  createAddProjectForm(allProjectsDiv, projectBody) {
+  createAddProjectForm(allProjectsDiv, projectBody, sidebar) {
     const addProjectForm = document.createElement('form')
     allProjectsDiv.appendChild(addProjectForm)
     const addProjectInput = document.createElement('input')
@@ -91,13 +98,14 @@ export default class DomManager {
     addProjectInput.id = 'projectNameInput'
     addProjectForm.appendChild(addProjectInput)
     const addProjectSubmit = document.createElement('button')
-    addProjectSubmit.textContent = 'Submit'
+    addProjectSubmit.textContent = 'Add Project'
     addProjectSubmit.type = 'submit'
     addProjectForm.appendChild(addProjectSubmit)
     addProjectSubmit.addEventListener('click', (e) => {
       e.preventDefault()
       this.appendProject(addProjectInput.value, allProjectsDiv, projectBody)
       addProjectForm.remove()
+      this.createAddProjectButton(sidebar, allProjectsDiv, projectBody)
     })
   }
 
@@ -175,7 +183,7 @@ export default class DomManager {
     addTaskForm.appendChild(addTaskPrioritySelect)
     const addPriorityLow = document.createElement('option')
     addTaskPrioritySelect.appendChild(addPriorityLow)
-    addPriorityLow.value = 'low'
+    addPriorityLow.value = 'Low'
     addPriorityLow.textContent = 'Low'
     const addPriorityMedium = document.createElement('option')
     addTaskPrioritySelect.appendChild(addPriorityMedium)
@@ -183,7 +191,7 @@ export default class DomManager {
     addPriorityMedium.textContent = 'Medium'
     const addPriorityhigh = document.createElement('option')
     addTaskPrioritySelect.appendChild(addPriorityhigh)
-    addPriorityhigh.value = 'high'
+    addPriorityhigh.value = 'High'
     addPriorityhigh.textContent = 'High'
 
     const addTaskSubmitButton = document.createElement('button')
@@ -193,7 +201,7 @@ export default class DomManager {
 
     addTaskSubmitButton.addEventListener('click', (e) => {
       e.preventDefault()
-      this.appendTask(addTaskTitleInput.value, addTaskDescriptionLabel.value, 
+      this.appendTask(addTaskTitleInput.value, addTaskDescriptionInput.value, 
                 addTaskDueDateInput.valueAsDate, addTaskPrioritySelect.value, 
                 projectBody)
       addTaskForm.remove()
