@@ -6,12 +6,18 @@ export default class DomManager {
     this.todoList = new TodoList()
   }
 
+  findActiveProjectIndex () {
+    return this.todoList.projects.indexOf(this.activeProject)
+  }
+
   renderAllTasksTab(homeProjectsDiv, projectBody) {
     const tabDiv = this.createHomeTaskTab('All Tasks')
 
-    this.handleProjectTabClick(tabDiv, projectBody, 
-                              this.todoList.getAllTasks(), "All Tasks")
-
+    // this.handleProjectTabClick(tabDiv, projectBody, 
+    //                           this.todoList.getAllTasks(), "All Tasks")
+    tabDiv.addEventListener('click', () => {
+      this.renderTasks(projectBody, this.todoList.getAllTasks(), 'allt')
+    })
     homeProjectsDiv.appendChild(tabDiv)
   }
   
@@ -42,6 +48,13 @@ export default class DomManager {
   handleProjectTabClick(projectTabDiv, projectBody, tasks, projectName) {
     projectTabDiv.addEventListener('click', () => {
       this.renderTasks(projectBody, tasks, projectName)
+      if (projectName === "All Tasks") {
+        this.activeProject = null
+      }
+      else {
+      this.activeProject = this.todoList.projects.find(
+                            project => project.name === projectName)
+      }
     })
   }
 
@@ -126,6 +139,7 @@ export default class DomManager {
     projectBody.insertBefore(addTaskForm, lastChild)
 
     const addTaskTitleLabel = document.createElement('label')
+    addTaskTitleLabel.setAttribute('for', 'title-input')
     addTaskForm.appendChild(addTaskTitleLabel)
     addTaskTitleLabel.textContent = "Title: "
     const addTaskTitleInput = document.createElement('input')
@@ -135,6 +149,7 @@ export default class DomManager {
     addTaskTitleInput.placeholder = 'What to do?'
 
     const addTaskDescriptionLabel = document.createElement('label')
+    addTaskDescriptionLabel.setAttribute('for', 'description-input')
     addTaskForm.appendChild(addTaskDescriptionLabel)
     addTaskDescriptionLabel.textContent = "Description: "
     const addTaskDescriptionInput = document.createElement('textarea')
@@ -143,6 +158,7 @@ export default class DomManager {
     addTaskDescriptionInput.placeholder = 'Any extra details?'
 
     const addTaskDueDateLabel = document.createElement('label')
+    addTaskDueDateLabel.setAttribute('for', 'date-input')
     addTaskForm.appendChild(addTaskDueDateLabel)
     addTaskDueDateLabel.textContent = 'Due Date: '
     const addTaskDueDateInput = document.createElement('input')
@@ -151,6 +167,7 @@ export default class DomManager {
     addTaskDueDateInput.id = 'date-input'
 
     const addTaskPriorityLabel = document.createElement('label')
+    addTaskPriorityLabel.setAttribute('for', 'priority-select')
     addTaskForm.appendChild(addTaskPriorityLabel)
     addTaskPriorityLabel.textContent = 'Priority'
     const addTaskPrioritySelect = document.createElement('select')
@@ -173,6 +190,25 @@ export default class DomManager {
     addTaskForm.appendChild(addTaskSubmitButton)
     addTaskSubmitButton.type = 'Submit'
     addTaskSubmitButton.textContent = 'Submit'
+
+    addTaskSubmitButton.addEventListener('click', (e) => {
+      e.preventDefault()
+      this.appendTask(addTaskTitleInput.value, addTaskDescriptionLabel.value, 
+                addTaskDueDateInput.valueAsDate, addTaskPrioritySelect.value, 
+                projectBody)
+      addTaskForm.remove()
+    })
+  }
+
+  appendTask(title, description, duedate, priority, projectBody) {
+    this.todoList.createTask(this.findActiveProjectIndex(), {
+      title: title,
+      description: description,
+      dueDate: duedate,
+      priority: priority
+    })
+    this.renderTasks(projectBody, this.activeProject.tasks, 
+                    this.activeProject.name)
   }
 
 // Rendering function
