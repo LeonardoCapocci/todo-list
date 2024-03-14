@@ -43,7 +43,7 @@ body {
 .project, .add-project-button, .sidebar form {
     margin: 20px;
     padding: 5px;
-    border-radius: 7px;
+    border-radius: 4px;
 }
 
 .sidebar, form {
@@ -63,11 +63,12 @@ body {
 }
 
 .active {
-    background-color: lightskyblue;
+    background-color: rgba(0, 0, 139, 0.55);
+    border-left: 3px solid darkblue;
 }
 
 .active:hover {
-    background-color: rgb(117, 155, 179);
+    background-color: rgba(0, 0, 139, 0.65);
 }
 
 /* Main Body */
@@ -77,11 +78,11 @@ body {
     padding: 10px;
     padding-top: 5px;
 }
-
+/* 
 .project-body div {
     margin: 20px;
     border: 1px solid gray;
-}
+} */
 
 .project-body form {
     margin: 20px;
@@ -98,6 +99,48 @@ body {
     color: rgb(247, 244, 244);
     background-color: darkblue;
     border-radius: 7px;
+}
+
+.task-div {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid gray;
+    background-color: white;
+}
+
+.task-div-top {
+    display: flex;
+    gap: 10px;
+}
+
+#completion-checkbox {
+    transform: scale(1.5);
+}
+
+.Low {
+    border-left: 7px solid green;
+}
+
+.Medium {
+    border-left: 7px solid orange;
+}
+
+.High {
+    border-left: 7px solid red;
+}
+
+#task-due-date {
+    margin-left: auto;
+}
+
+#edit-icon {
+    margin-right: 0;
+}
+
+#bin-icon {
+    margin-right: 0;
 }
 
 .add-task-button {

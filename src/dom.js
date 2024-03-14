@@ -76,26 +76,40 @@ export default class DomManager {
       if (task.completed === false) {
         const taskDiv = document.createElement('div')
         projectBody.appendChild(taskDiv)
+        taskDiv.classList.add('task-div')
+        const taskDivTop = document.createElement('div')
+        taskDiv.appendChild(taskDivTop)
+        taskDivTop.classList.add('task-div-top')
         const completionCheckbox = document.createElement('input')
-        taskDiv.appendChild(completionCheckbox)
+        taskDivTop.appendChild(completionCheckbox)
         completionCheckbox.type = 'checkbox'
         completionCheckbox.id = 'completion-checkbox'
         this.handleCompletionCheckboxClick(completionCheckbox, task, taskDiv)
         const taskTitleParagraph = document.createElement('p')
-        taskDiv.appendChild(taskTitleParagraph)
+        taskDivTop.appendChild(taskTitleParagraph)
         taskTitleParagraph.textContent = task.title
+        taskTitleParagraph.id = 'task-title'
         const taskDescriptionParagraph = document.createElement('p')
         taskDiv.appendChild(taskDescriptionParagraph)
         taskDescriptionParagraph.textContent = task.description
+        taskDescriptionParagraph.id = 'task-description'
         const taskDueDateParagraph = document.createElement('p')
-        taskDiv.appendChild(taskDueDateParagraph)
+        taskDivTop.appendChild(taskDueDateParagraph)
+        taskDueDateParagraph.id = 'task-due-date'
         const dueDate = new Date(task.dueDate.replace(/-/g, '\/'))
-        const options = { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }
-        const formattedDueDate = dueDate.toLocaleDateString('en-US', options)
+        const options = { 
+          weekday: 'short', 
+          month: '2-digit', 
+          day: '2-digit', 
+          year: 'numeric' 
+        };
+        const formattedDueDate = dueDate.toLocaleDateString('en-US', options).replace(',', '')
         taskDueDateParagraph.textContent = formattedDueDate
-        const taskPriorityParagraph = document.createElement('p')
-        taskDiv.appendChild(taskPriorityParagraph)
-        taskPriorityParagraph.textContent = task.priority
+        // const taskPriorityParagraph = document.createElement('p')
+        // taskDivTop.appendChild(taskPriorityParagraph)
+        // taskPriorityParagraph.textContent = task.priority
+        // taskPriorityParagraph.id = 'task-priority'
+        taskDiv.classList.add(task.priority)
       }
     })
     if (projectName !== "All Tasks")
@@ -249,11 +263,11 @@ export default class DomManager {
         event.preventDefault(); // Prevent the default behavior of unchecking the checkbox
       }
       task.completed = true
-      taskDiv.style.transition = 'opacity 3s';
+      taskDiv.style.transition = 'opacity 2s';
       taskDiv.style.opacity = '0';
       setTimeout(() => {
         taskDiv.style.display = 'none'
-      }, 3050);
+      }, 2020);
     })
   }
 
@@ -262,6 +276,18 @@ export default class DomManager {
     // Creating temporary test projects/classes
     this.todoList.createProject('Project 1')
     this.todoList.createProject('Project 2')
+    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });
+    // this.todoList.createTask(0, {
+    //   title: "Kiss Leo",
+    //   description: "As soon as you see this",
+    //   dueDate: "2024-03-14", // Make sure to pass a valid date format
+    //   priority: "High"
+    // });
     
     // Creating and sorting the divs
     const body = document.querySelector('body')
