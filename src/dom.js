@@ -1,4 +1,5 @@
 import TodoList from "./todolist";
+import Task from "./task";
 
 export default class DomManager {
   constructor() {
@@ -19,6 +20,8 @@ export default class DomManager {
       this.renderTasks(projectBody, this.todoList.getAllTasks(), 'All Tasks')
     })
     homeProjectsDiv.appendChild(tabDiv)
+    this.highlightLatestProject(tabDiv)
+    tabDiv.classList.add('active')
   }
   
   createHomeTaskTab(name) {
@@ -46,6 +49,7 @@ export default class DomManager {
   }
 
   handleProjectTabClick(projectTabDiv, projectBody, tasks, projectName) {
+    this.highlightLatestProject(projectTabDiv)
     projectTabDiv.addEventListener('click', () => {
       this.renderTasks(projectBody, tasks, projectName)
       this.activeProject = this.todoList.projects.find(
@@ -54,29 +58,45 @@ export default class DomManager {
     })
   }
 
+  highlightLatestProject(projectTabDiv) {
+    projectTabDiv.addEventListener('click', () => {
+      const allProjectTabs = document.querySelectorAll('.project')
+      allProjectTabs.forEach(tab => tab.classList.remove('active'))
+      projectTabDiv.classList.add('active')
+    })
+  }
+
   renderTasks(projectBody, tasks, projectName) {
+    console.log('rendering!')
     projectBody.textContent = ''
     const projectNameTitle = document.createElement('h1')
     projectNameTitle.textContent = projectName
     projectBody.appendChild(projectNameTitle)
     tasks.forEach((task) => {
-      const taskDiv = document.createElement('div')
-      projectBody.appendChild(taskDiv)
-      const taskTitleParagraph = document.createElement('p')
-      taskDiv.appendChild(taskTitleParagraph)
-      taskTitleParagraph.textContent = task.title
-      const taskDescriptionParagraph = document.createElement('p')
-      taskDiv.appendChild(taskDescriptionParagraph)
-      taskDescriptionParagraph.textContent = task.description
-      const taskDueDateParagraph = document.createElement('p')
-      taskDiv.appendChild(taskDueDateParagraph)
-      const dueDate = new Date(task.dueDate.replace(/-/g, '\/'))
-      const options = { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }
-      const formattedDueDate = dueDate.toLocaleDateString('en-US', options)
-      taskDueDateParagraph.textContent = formattedDueDate
-      const taskPriorityParagraph = document.createElement('p')
-      taskDiv.appendChild(taskPriorityParagraph)
-      taskPriorityParagraph.textContent = task.priority
+      if (task.completed === false) {
+        const taskDiv = document.createElement('div')
+        projectBody.appendChild(taskDiv)
+        const completionCheckbox = document.createElement('input')
+        taskDiv.appendChild(completionCheckbox)
+        completionCheckbox.type = 'checkbox'
+        completionCheckbox.id = 'completion-checkbox'
+        this.handleCompletionCheckboxClick(completionCheckbox, task, taskDiv)
+        const taskTitleParagraph = document.createElement('p')
+        taskDiv.appendChild(taskTitleParagraph)
+        taskTitleParagraph.textContent = task.title
+        const taskDescriptionParagraph = document.createElement('p')
+        taskDiv.appendChild(taskDescriptionParagraph)
+        taskDescriptionParagraph.textContent = task.description
+        const taskDueDateParagraph = document.createElement('p')
+        taskDiv.appendChild(taskDueDateParagraph)
+        const dueDate = new Date(task.dueDate.replace(/-/g, '\/'))
+        const options = { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' }
+        const formattedDueDate = dueDate.toLocaleDateString('en-US', options)
+        taskDueDateParagraph.textContent = formattedDueDate
+        const taskPriorityParagraph = document.createElement('p')
+        taskDiv.appendChild(taskPriorityParagraph)
+        taskPriorityParagraph.textContent = task.priority
+      }
     })
     if (projectName !== "All Tasks")
     this.createAddTaskButton(projectBody)
@@ -223,31 +243,26 @@ export default class DomManager {
                     this.activeProject.name)
   }
 
+  handleCompletionCheckboxClick(completionCheckbox, task, taskDiv) {
+    completionCheckbox.addEventListener('click', (event) => {
+      if (!completionCheckbox.checked) {
+        event.preventDefault(); // Prevent the default behavior of unchecking the checkbox
+      }
+      task.completed = true
+      taskDiv.style.transition = 'opacity 3s';
+      taskDiv.style.opacity = '0';
+      setTimeout(() => {
+        taskDiv.style.display = 'none'
+      }, 3050);
+    })
+  }
+
 // Rendering function
   renderAll() {
     // Creating temporary test projects/classes
     this.todoList.createProject('Project 1')
     this.todoList.createProject('Project 2')
-    // this.todoList.createTask(0, {
-    //   title: 'lets go',
-    //   description: 'be great',
-    //   dueDate: 'today',
-    //   priority: 'essential'
-    // });
-
-    // this.todoList.createTask(1, {
-    //   title: 'another leggo',
-    //   description: 'be great',
-    //   dueDate: 'today',
-    //   priority: 'essential'
-    // });
-    // this.todoList.createTask(1, {
-    //   title: 'ANOTHA leggo',
-    //   description: 'be great',
-    //   dueDate: 'today',
-    //   priority: 'essential'
-    // });
-
+    
     // Creating and sorting the divs
     const body = document.querySelector('body')
     const headerContainer = document.createElement('div')
