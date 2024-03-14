@@ -54,7 +54,6 @@ export default class DomManager {
       this.renderTasks(projectBody, tasks, projectName)
       this.activeProject = this.todoList.projects.find(
                             project => project.name === projectName)
-      console.log(this.activeProject)
     })
   }
 
@@ -67,7 +66,6 @@ export default class DomManager {
   }
 
   renderTasks(projectBody, tasks, projectName) {
-    console.log('rendering!')
     projectBody.textContent = ''
     const projectNameTitle = document.createElement('h1')
     projectNameTitle.textContent = projectName
@@ -133,16 +131,19 @@ export default class DomManager {
     const addProjectInput = document.createElement('input')
     addProjectInput.type = 'text'
     addProjectInput.id = 'projectNameInput'
+    addProjectInput.required = true
     addProjectForm.appendChild(addProjectInput)
     const addProjectSubmit = document.createElement('button')
     addProjectSubmit.textContent = 'Add Project'
     addProjectSubmit.type = 'submit'
     addProjectForm.appendChild(addProjectSubmit)
     addProjectSubmit.addEventListener('click', (e) => {
+      if (addProjectInput.value.trim() !== '') {
       e.preventDefault()
       this.appendProject(addProjectInput.value, allProjectsDiv, projectBody)
       addProjectForm.remove()
       this.createAddProjectButton(sidebar, allProjectsDiv, projectBody)
+      }
     })
   }
 
@@ -192,6 +193,7 @@ export default class DomManager {
     addTaskTitleInput.type = 'text'
     addTaskTitleInput.id = 'title-input'
     addTaskTitleInput.placeholder = 'What to do?'
+    addTaskTitleInput.required = true
 
     const addTaskDescriptionLabel = document.createElement('label')
     addTaskDescriptionLabel.setAttribute('for', 'description-input')
@@ -210,6 +212,7 @@ export default class DomManager {
     addTaskForm.appendChild(addTaskDueDateInput)
     addTaskDueDateInput.type = 'date'
     addTaskDueDateInput.id = 'date-input'
+    addTaskDueDateInput.required = true
 
     const addTaskPriorityLabel = document.createElement('label')
     addTaskPriorityLabel.setAttribute('for', 'priority-select')
@@ -237,12 +240,14 @@ export default class DomManager {
     addTaskSubmitButton.textContent = 'Submit'
 
     addTaskSubmitButton.addEventListener('click', (e) => {
-      e.preventDefault()
-      this.appendTask(addTaskTitleInput.value, addTaskDescriptionInput.value, 
-                addTaskDueDateInput.value, addTaskPrioritySelect.value, 
-                projectBody)
+      if (addTaskTitleInput.value.trim() !== '' && addTaskDueDateInput.value !== '') {
+        e.preventDefault()
+        this.appendTask(addTaskTitleInput.value, addTaskDescriptionInput.value, 
+                  addTaskDueDateInput.value, addTaskPrioritySelect.value, 
+                  projectBody)
 
-      addTaskForm.remove()
+        addTaskForm.remove()
+     }
     })
   }
 
