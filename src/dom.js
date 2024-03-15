@@ -70,7 +70,8 @@ export default class DomManager {
     const projectNameTitle = document.createElement('h1')
     projectNameTitle.textContent = projectName
     projectBody.appendChild(projectNameTitle)
-    tasks.forEach((task) => {
+    const sortedTasks = this.sortTasksByDate(tasks)
+    sortedTasks.forEach((task, index) => {
       if (task.completed === false) {
         const taskDiv = document.createElement('div')
         projectBody.appendChild(taskDiv)
@@ -81,7 +82,8 @@ export default class DomManager {
         const completionCheckbox = document.createElement('input')
         taskDivTop.appendChild(completionCheckbox)
         completionCheckbox.type = 'checkbox'
-        completionCheckbox.id = 'completion-checkbox'
+        completionCheckbox.classList.add('completion-checkbox')
+        completionCheckbox.id = index
         this.handleCompletionCheckboxClick(completionCheckbox, task, taskDiv)
         const taskTitleParagraph = document.createElement('p')
         taskDivTop.appendChild(taskTitleParagraph)
@@ -102,16 +104,16 @@ export default class DomManager {
           year: 'numeric' 
         };
         const formattedDueDate = dueDate.toLocaleDateString('en-US', options).replace(',', '')
-        taskDueDateParagraph.textContent = formattedDueDate
-        // const taskPriorityParagraph = document.createElement('p')
-        // taskDivTop.appendChild(taskPriorityParagraph)
-        // taskPriorityParagraph.textContent = task.priority
-        // taskPriorityParagraph.id = 'task-priority'
+        taskDueDateParagraph.textContent = 'Due: ' + formattedDueDate
         taskDiv.classList.add(task.priority)
       }
     })
     if (projectName !== "All Tasks")
     this.createAddTaskButton(projectBody)
+  }
+
+  sortTasksByDate(taskArray) {
+    return taskArray.sort((a, b) => a.dueDate.replace(/-/g, '') - b.dueDate.replace(/-/g, ''))
   }
 
   createAddProjectButton(sidebar, allProjectsDiv, projectBody) {
@@ -287,12 +289,6 @@ export default class DomManager {
       dueDate: "2024-03-10", // Make sure to pass a valid date format
       priority: "Medium"
     });
-    // this.todoList.createTask(0, {
-    //   title: "Kiss Leo",
-    //   description: "As soon as you see this",
-    //   dueDate: "2024-03-14", // Make sure to pass a valid date format
-    //   priority: "High"
-    // });
     
     // Creating and sorting the divs
     const body = document.querySelector('body')
