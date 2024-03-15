@@ -289,6 +289,72 @@ export default class DomManager {
       dueDate: "2024-03-10", // Make sure to pass a valid date format
       priority: "Medium"
     });
+    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });    this.todoList.createTask(0, {
+      title: "This is my task",
+      description: "This is a very detailed and well thought out description of my task if i want to include it",
+      dueDate: "2024-03-10", // Make sure to pass a valid date format
+      priority: "Medium"
+    });
     
     // Creating and sorting the divs
     const body = document.querySelector('body')
