@@ -106,6 +106,19 @@ export default class DomManager {
         const formattedDueDate = dueDate.toLocaleDateString('en-US', options).replace(',', '')
         taskDueDateParagraph.textContent = 'Due: ' + formattedDueDate
         taskDiv.classList.add(task.priority)
+
+        const deleteTaskButton = document.createElement('button')
+        taskDivTop.appendChild(deleteTaskButton)
+        deleteTaskButton.textContent = 'DELETE TASK'
+        deleteTaskButton.id = 'bin-icon'
+        deleteTaskButton.addEventListener('click', () => {
+          this.todoList.deleteTask(this.findActiveProjectIndex(), index)
+          taskDiv.style.transition = 'opacity 0.5s';
+          taskDiv.style.opacity = '0';
+          setTimeout(() => {
+            taskDiv.style.display = 'none'
+          }, 515);
+        })
       }
     })
     if (projectName !== "All Tasks")

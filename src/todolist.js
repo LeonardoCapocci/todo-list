@@ -19,6 +19,11 @@ export default class TodoList {
       console.log("That project doesn't seem to exist")
     }
   }
+
+  deleteTask(projectIndex, taskIndex) {
+    const project = this.projects[projectIndex]
+    project.tasks.splice(taskIndex, 1)
+  }
   getAllTasks() {
     return this.projects.flatMap(project => project.tasks)
   }

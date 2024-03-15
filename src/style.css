@@ -2,7 +2,7 @@
     margin: 0;
     font-size: 1.25rem;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    /* border: 1px solid red; */
+    border: 1px solid red;
 }
 
 /* Body */
@@ -112,6 +112,7 @@ body {
 .task-div-top {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .completion-checkbox {
@@ -133,6 +134,11 @@ body {
 #task-due-date {
     margin-left: auto;
     color: gray;
+    font-size: 1rem;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
 }
 
 #task-description {
@@ -145,6 +151,7 @@ body {
 
 #bin-icon {
     margin-right: 0;
+    font-size: 1rem;
 }
 
 .add-task-button {
