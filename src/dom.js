@@ -14,14 +14,22 @@ export default class DomManager {
   renderAllTasksTab(homeProjectsDiv, projectBody) {
     const tabDiv = this.createHomeTaskTab('All Tasks')
 
-    // this.handleProjectTabClick(tabDiv, projectBody, 
-    //                           this.todoList.getAllTasks(), "All Tasks")
     tabDiv.addEventListener('click', () => {
       this.renderTasks(projectBody, this.todoList.getAllTasks(), 'All Tasks')
     })
     homeProjectsDiv.appendChild(tabDiv)
     this.highlightLatestProject(tabDiv)
     tabDiv.classList.add('active')
+  }
+
+  renderWeekTasksTab(homeProjectsDiv, projectBody) {
+    const tabDiv = this.createHomeTaskTab('Next Week')
+
+    tabDiv.addEventListener('click', () => {
+      this.renderTasks(projectBody, this.todoList.filterWeekTasks(), 'Next Week')
+    })
+    homeProjectsDiv.appendChild(tabDiv)
+    this.highlightLatestProject(tabDiv)
   }
   
   createHomeTaskTab(name) {
@@ -34,26 +42,43 @@ export default class DomManager {
   }
 
   renderProjectTabs(allProjectsDiv, projectBody) {
-    this.todoList.projects.forEach((project) => {
+    allProjectsDiv.textContent = ''
+    this.todoList.projects.forEach((project, index) => {
       const projectDiv = document.createElement('div')
       projectDiv.classList.add('project')
       const projectParagraph = document.createElement('p')
+      projectDiv.appendChild(projectParagraph)
       projectParagraph.textContent = project.name
+      const deleteProjectButton = document.createElement('button')
+      projectDiv.appendChild(deleteProjectButton)
+      deleteProjectButton.classList.add('delete-project-button')
+      deleteProjectButton.textContent = '❌'
+      
       // Event listener on project
       this.handleProjectTabClick(projectDiv, projectBody, 
                                 project.tasks, project.name)
+      this.handleDeleteProjectButtonClick(deleteProjectButton, index, allProjectsDiv, projectBody, projectDiv)
 
-      projectDiv.appendChild(projectParagraph)
       allProjectsDiv.appendChild(projectDiv)
     })
   }
 
   handleProjectTabClick(projectTabDiv, projectBody, tasks, projectName) {
     this.highlightLatestProject(projectTabDiv)
-    projectTabDiv.addEventListener('click', () => {
-      this.renderTasks(projectBody, tasks, projectName)
-      this.activeProject = this.todoList.projects.find(
-                            project => project.name === projectName)
+    projectTabDiv.addEventListener('click', (event) => {
+      if (!event.target.classList.contains('delete-project-button')) {
+        this.renderTasks(projectBody, tasks, projectName)
+        this.activeProject = this.todoList.projects.find(
+                              project => project.name === projectName)
+      }
+    })
+  }
+
+  handleDeleteProjectButtonClick(deleteProjectButton, index, allProjectsDiv, projectBody) {
+    deleteProjectButton.addEventListener('click', () => {
+      this.todoList.projects.splice(index, 1)
+      this.renderProjectTabs(allProjectsDiv, projectBody)
+      this.renderTasks(projectBody, this.todoList.getAllTasks(), 'All Tasks')
     })
   }
 
@@ -71,62 +96,65 @@ export default class DomManager {
     projectNameTitle.textContent = projectName
     projectBody.appendChild(projectNameTitle)
     const sortedTasks = this.sortTasksByDate(tasks)
-    sortedTasks.forEach((task, index) => {
-      if (task.completed === false) {
-        const taskDiv = document.createElement('div')
-        projectBody.appendChild(taskDiv)
-        taskDiv.classList.add('task-div')
-        const taskDivTop = document.createElement('div')
-        taskDiv.appendChild(taskDivTop)
-        taskDivTop.classList.add('task-div-top')
-        const completionCheckbox = document.createElement('input')
-        taskDivTop.appendChild(completionCheckbox)
-        completionCheckbox.type = 'checkbox'
-        completionCheckbox.classList.add('completion-checkbox')
-        completionCheckbox.id = index
-        this.handleCompletionCheckboxClick(completionCheckbox, task, taskDiv)
-        const taskTitleParagraph = document.createElement('p')
-        taskDivTop.appendChild(taskTitleParagraph)
-        taskTitleParagraph.textContent = task.title
-        taskTitleParagraph.id = 'task-title'
-        const taskDescriptionParagraph = document.createElement('p')
-        taskDiv.appendChild(taskDescriptionParagraph)
-        taskDescriptionParagraph.textContent = task.description
-        taskDescriptionParagraph.id = 'task-description'
-        const taskDueDateParagraph = document.createElement('p')
-        taskDivTop.appendChild(taskDueDateParagraph)
-        taskDueDateParagraph.id = 'task-due-date'
-        const dueDate = new Date(task.dueDate.replace(/-/g, '\/'))
-        const options = { 
-          weekday: 'short', 
-          month: '2-digit', 
-          day: '2-digit', 
-          year: 'numeric' 
-        };
-        const formattedDueDate = dueDate.toLocaleDateString('en-US', options).replace(',', '')
-        taskDueDateParagraph.textContent = 'Due: ' + formattedDueDate
-        taskDiv.classList.add(task.priority)
+    if (tasks) {
+      sortedTasks.forEach((task, index) => {
+        if (task.completed === false) {
+          const taskDiv = document.createElement('div')
+          projectBody.appendChild(taskDiv)
+          taskDiv.classList.add('task-div')
+          const taskDivTop = document.createElement('div')
+          taskDiv.appendChild(taskDivTop)
+          taskDivTop.classList.add('task-div-top')
+          const completionCheckbox = document.createElement('input')
+          taskDivTop.appendChild(completionCheckbox)
+          completionCheckbox.type = 'checkbox'
+          completionCheckbox.classList.add('completion-checkbox')
+          completionCheckbox.id = index
+          this.handleCompletionCheckboxClick(completionCheckbox, task, taskDiv)
+          const taskTitleParagraph = document.createElement('p')
+          taskDivTop.appendChild(taskTitleParagraph)
+          taskTitleParagraph.textContent = task.title
+          taskTitleParagraph.id = 'task-title'
+          const taskDescriptionParagraph = document.createElement('p')
+          taskDiv.appendChild(taskDescriptionParagraph)
+          taskDescriptionParagraph.textContent = task.description
+          taskDescriptionParagraph.id = 'task-description'
+          const taskDueDateParagraph = document.createElement('p')
+          taskDivTop.appendChild(taskDueDateParagraph)
+          taskDueDateParagraph.id = 'task-due-date'
+          const dueDate = new Date(task.dueDate.replace(/-/g, '\/'))
+          const options = { 
+            weekday: 'short', 
+            month: '2-digit', 
+            day: '2-digit', 
+            year: 'numeric' 
+          };
+          const formattedDueDate = dueDate.toLocaleDateString('en-US', options).replace(',', '')
+          taskDueDateParagraph.textContent = 'Due: ' + formattedDueDate
+          taskDiv.classList.add(task.priority)
+  
+          const deleteTaskButton = document.createElement('button')
+          taskDivTop.appendChild(deleteTaskButton)
+          deleteTaskButton.textContent = '❌'
+          deleteTaskButton.id = 'bin-icon'
+          deleteTaskButton.addEventListener('click', () => {
+            this.todoList.deleteTask(this.todoList.projects.indexOf(task.project), task)
+            taskDiv.style.transition = 'opacity 0.5s';
+            taskDiv.style.opacity = '0';
+            setTimeout(() => {
+              taskDiv.style.display = 'none'
+            }, 515);
+          })
+        }
+      })
+    }
 
-        const deleteTaskButton = document.createElement('button')
-        taskDivTop.appendChild(deleteTaskButton)
-        deleteTaskButton.textContent = 'DELETE TASK'
-        deleteTaskButton.id = 'bin-icon'
-        deleteTaskButton.addEventListener('click', () => {
-          this.todoList.deleteTask(this.findActiveProjectIndex(), index)
-          taskDiv.style.transition = 'opacity 0.5s';
-          taskDiv.style.opacity = '0';
-          setTimeout(() => {
-            taskDiv.style.display = 'none'
-          }, 515);
-        })
-      }
-    })
     if (projectName !== "All Tasks")
     this.createAddTaskButton(projectBody)
   }
 
   sortTasksByDate(taskArray) {
-    return taskArray.sort((a, b) => a.dueDate.replace(/-/g, '') - b.dueDate.replace(/-/g, ''))
+    if (taskArray) return taskArray.sort((a, b) => a.dueDate.replace(/-/g, '') - b.dueDate.replace(/-/g, ''))
   }
 
   createAddProjectButton(sidebar, allProjectsDiv, projectBody) {
@@ -271,7 +299,8 @@ export default class DomManager {
       title: title,
       description: description,
       dueDate: duedate,
-      priority: priority
+      priority: priority,
+      project: this.activeProject
     })
     this.renderTasks(projectBody, this.activeProject.tasks, 
                     this.activeProject.name)
@@ -296,77 +325,77 @@ export default class DomManager {
     // Creating temporary test projects/classes
     this.todoList.createProject('Project 1')
     this.todoList.createProject('Project 2')
+    this.todoList.createProject('Project 3')
     this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
+      title: "Task 1",
+      description: "",
+      dueDate: "2024-03-05", // Start of March 2024
+      priority: "Medium",
+      project: this.todoList.projects[0]
     });
+    
     this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
-    });    this.todoList.createTask(0, {
-      title: "This is my task",
-      description: "This is a very detailed and well thought out description of my task if i want to include it",
-      dueDate: "2024-03-10", // Make sure to pass a valid date format
-      priority: "Medium"
+      title: "Task 2",
+      description: "",
+      dueDate: "2024-03-15", // Middle of March 2024
+      priority: "Low",
+      project: this.todoList.projects[0]
+    });
+    
+    this.todoList.createTask(0, {
+      title: "Task 3",
+      description: "",
+      dueDate: "2024-03-25", // End of March 2024
+      priority: "High",
+      project: this.todoList.projects[0]
+    });
+
+    this.todoList.createTask(1, {
+      title: "Task 4",
+      description: "",
+      dueDate: "2024-03-07", // Start of March 2024
+      priority: "High",
+      project: this.todoList.projects[1]
+    });
+    
+    this.todoList.createTask(1, {
+      title: "Task 5",
+      description: "",
+      dueDate: "2024-03-17", // Middle of March 2024
+      priority: "Medium",
+      project: this.todoList.projects[1]
+    });
+    
+    this.todoList.createTask(1, {
+      title: "Task 6",
+      description: "",
+      dueDate: "2024-03-27", // End of March 2024
+      priority: "Low",
+      project: this.todoList.projects[1]
+    });
+
+    this.todoList.createTask(2, {
+      title: "Task 7",
+      description: "",
+      dueDate: "2024-03-08", // Start of March 2024
+      priority: "Medium",
+      project: this.todoList.projects[2]
+    });
+    
+    this.todoList.createTask(2, {
+      title: "Task 8",
+      description: "",
+      dueDate: "2024-03-18", // Middle of March 2024
+      priority: "High",
+      project: this.todoList.projects[2]
+    });
+    
+    this.todoList.createTask(2, {
+      title: "Task 9",
+      description: "",
+      dueDate: "2024-03-28", // End of March 2024
+      priority: "Low",
+      project: this.todoList.projects[2]
     });
     
     // Creating and sorting the divs
@@ -402,6 +431,7 @@ export default class DomManager {
     // All tasks
     this.renderAllTasksTab(homeProjectsDiv, projectBody)
     this.renderTasks(projectBody, this.todoList.getAllTasks(), "All Tasks")
+    this.renderWeekTasksTab(homeProjectsDiv, projectBody)
 
     // Displaying the projects in the sidebar
     this.renderProjectTabs(allProjectsDiv, projectBody)

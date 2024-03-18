@@ -2,7 +2,7 @@
     margin: 0;
     font-size: 1.25rem;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    border: 1px solid red;
+    /* border: 1px solid red; */
 }
 
 /* Body */
@@ -44,6 +44,19 @@ body {
     margin: 20px;
     padding: 5px;
     border-radius: 4px;
+}
+
+.project {
+    display: flex;
+}
+
+.delete-project-button {
+    font-size: 0.5rem;
+    margin-right: 0;
+    margin-left: auto;
+    border: none;
+    padding: 0 5px;
+    background-color: transparent;
 }
 
 .sidebar, form {
@@ -151,7 +164,8 @@ body {
 
 #bin-icon {
     margin-right: 0;
-    font-size: 1rem;
+    font-size: 0.5rem;
+    padding: 1px 3px;
 }
 
 .add-task-button {
