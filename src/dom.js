@@ -140,7 +140,10 @@ export default class DomManager {
           deleteTaskButton.textContent = '❌'
           deleteTaskButton.id = 'bin-icon'
           deleteTaskButton.addEventListener('click', () => {
-            this.todoList.deleteTask(this.todoList.projects.indexOf(task.project), task)
+            console.log(task)
+            const projectIndex = this.todoList.projects.findIndex(project => project.name === task.project)
+            this.todoList.deleteTask(projectIndex, task)
+            saveData("todolist", this.todoList)
             taskDiv.style.transition = 'opacity 0.5s';
             taskDiv.style.opacity = '0';
             setTimeout(() => {
@@ -195,7 +198,6 @@ export default class DomManager {
   appendProject(name, allProjectsDiv, projectBody) {
     this.todoList.createProject(name)
     this.renderLatestProjectTab(allProjectsDiv, projectBody)
-    console.log(this.todoList)
     saveData("todolist", this.todoList)
   }
 
@@ -308,6 +310,7 @@ export default class DomManager {
         event.preventDefault(); // Prevent the default behavior of unchecking the checkbox
       }
       task.completed = true
+      saveData("todolist", this.todoList)
       taskDiv.style.transition = 'opacity 2s';
       taskDiv.style.opacity = '0';
       setTimeout(() => {
@@ -320,9 +323,9 @@ export default class DomManager {
   renderAll() {
     //Load Data from localstorage
     const storedData = loadData("todolist")
-    console.log(storedData)
     if (storedData) {
       this.todoList = TodoList.fromObject(storedData)
+      console.log("stored data ")
       console.log(this.todoList)
     }
     else {

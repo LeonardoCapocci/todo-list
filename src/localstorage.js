@@ -1,12 +1,20 @@
 export function saveData(key, data) {
-  console.log("SAVING DATA!")
-  console.log(data)
   localStorage.setItem(key, JSON.stringify(data))
 }
 
 export function loadData(key) {
-  console.log("LOADING DATA!")
   const data = localStorage.getItem(key)
-  console.log(data)
-  return data ? JSON.parse(data) : null
+  if (data) {
+    try {
+        return JSON.parse(data);
+    }
+    catch (error) {
+        console.error("Error parsing JSON data:", error);
+        return null;
+    }
+  }
+  else {
+    console.error("No data found in localStorage for key:", key);
+    return null;
+  }
 }
