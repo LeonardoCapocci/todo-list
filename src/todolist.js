@@ -5,6 +5,20 @@ export default class TodoList {
   constructor() {
     this.projects = []
   }
+
+  static fromObject(obj) {
+    const todoList = new TodoList();
+    // Populate todoList properties from obj
+    console.log("obj")
+    console.log(obj)
+    todoList.projects = obj.projects.map(project => {
+        const tasks = project.tasks.map(task => new Task(task.title, task.description, task.dueDate, task.priority));
+        return new Project(project.name, tasks);
+    });
+    // Populate other properties if needed
+    return todoList;
+  }
+
   createProject(name) {
     const project = new Project(name)
     this.projects.push(project)
@@ -22,6 +36,7 @@ export default class TodoList {
 
   deleteTask(projectIndex, task) {
     const project = this.projects[projectIndex]
+    console.log(this.projects[projectIndex])
     const taskIndex = this.projects[projectIndex].tasks.indexOf(task)
     project.tasks.splice(taskIndex, 1)
   }

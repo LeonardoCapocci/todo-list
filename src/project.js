@@ -1,8 +1,8 @@
 import Task from "./task";
 
 export default class Project {
-  constructor(name) {
+  constructor(name, tasks = []) {
     this.name = name
-    this.tasks = []
+    this.tasks = tasks
   }
 }

@@ -1,5 +1,6 @@
 import TodoList from "./todolist";
 import Task from "./task";
+import { saveData, loadData } from "./localstorage";
 
 export default class DomManager {
   constructor() {
@@ -79,6 +80,7 @@ export default class DomManager {
       this.todoList.projects.splice(index, 1)
       this.renderProjectTabs(allProjectsDiv, projectBody)
       this.renderTasks(projectBody, this.todoList.getAllTasks(), 'All Tasks')
+      saveData("todolist", this.todoList)
     })
   }
 
@@ -193,19 +195,12 @@ export default class DomManager {
   appendProject(name, allProjectsDiv, projectBody) {
     this.todoList.createProject(name)
     this.renderLatestProjectTab(allProjectsDiv, projectBody)
+    console.log(this.todoList)
+    saveData("todolist", this.todoList)
   }
 
   renderLatestProjectTab(allProjectsDiv, projectBody) {
-    const projectDiv = document.createElement('div')
-    projectDiv.classList.add('project')
-    const projectParagraph = document.createElement('p')
-    const lastProjectIndex = this.todoList.projects.length - 1
-    projectParagraph.textContent = this.todoList.projects[lastProjectIndex].name
-    projectDiv.appendChild(projectParagraph)
-    allProjectsDiv.appendChild(projectDiv)
-    this.handleProjectTabClick(projectDiv, projectBody, 
-      this.todoList.projects[lastProjectIndex].tasks, 
-      this.todoList.projects[lastProjectIndex].name)
+    this.renderProjectTabs(allProjectsDiv, projectBody)
   }
 
   createAddTaskButton(projectBody) {
@@ -300,10 +295,11 @@ export default class DomManager {
       description: description,
       dueDate: duedate,
       priority: priority,
-      project: this.activeProject
+      project: this.activeProject.name
     })
     this.renderTasks(projectBody, this.activeProject.tasks, 
                     this.activeProject.name)
+    saveData("todolist", this.todoList)
   }
 
   handleCompletionCheckboxClick(completionCheckbox, task, taskDiv) {
@@ -322,6 +318,14 @@ export default class DomManager {
 
 // Rendering function
   renderAll() {
+    //Load Data from localstorage
+    const storedData = loadData("todolist")
+    console.log(storedData)
+    if (storedData) {
+      this.todoList = TodoList.fromObject(storedData)
+      console.log(this.todoList)
+    }
+    else {
     // Creating temporary test projects/classes
     this.todoList.createProject('Project 1')
     this.todoList.createProject('Project 2')
@@ -331,7 +335,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-05", // Start of March 2024
       priority: "Medium",
-      project: this.todoList.projects[0]
+      project: this.todoList.projects[0].name
     });
     
     this.todoList.createTask(0, {
@@ -339,7 +343,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-15", // Middle of March 2024
       priority: "Low",
-      project: this.todoList.projects[0]
+      project: this.todoList.projects[0].name
     });
     
     this.todoList.createTask(0, {
@@ -347,7 +351,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-25", // End of March 2024
       priority: "High",
-      project: this.todoList.projects[0]
+      project: this.todoList.projects[0].name
     });
 
     this.todoList.createTask(1, {
@@ -355,7 +359,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-07", // Start of March 2024
       priority: "High",
-      project: this.todoList.projects[1]
+      project: this.todoList.projects[1].name
     });
     
     this.todoList.createTask(1, {
@@ -363,7 +367,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-17", // Middle of March 2024
       priority: "Medium",
-      project: this.todoList.projects[1]
+      project: this.todoList.projects[1].name
     });
     
     this.todoList.createTask(1, {
@@ -371,7 +375,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-27", // End of March 2024
       priority: "Low",
-      project: this.todoList.projects[1]
+      project: this.todoList.projects[1].name
     });
 
     this.todoList.createTask(2, {
@@ -379,7 +383,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-08", // Start of March 2024
       priority: "Medium",
-      project: this.todoList.projects[2]
+      project: this.todoList.projects[2].name
     });
     
     this.todoList.createTask(2, {
@@ -387,7 +391,7 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-18", // Middle of March 2024
       priority: "High",
-      project: this.todoList.projects[2]
+      project: this.todoList.projects[2].name
     });
     
     this.todoList.createTask(2, {
@@ -395,8 +399,9 @@ export default class DomManager {
       description: "",
       dueDate: "2024-03-28", // End of March 2024
       priority: "Low",
-      project: this.todoList.projects[2]
+      project: this.todoList.projects[2].name
     });
+    }
     
     // Creating and sorting the divs
     const body = document.querySelector('body')
